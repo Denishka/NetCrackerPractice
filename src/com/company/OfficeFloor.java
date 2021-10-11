@@ -5,8 +5,8 @@ import java.util.Random;
 public class OfficeFloor {
 
     private static class Node {
-        Office office;
-        Node next;
+        private Office office;
+        private Node next;
 
         public Node(Office office, Node next) {
             this.office = office;
@@ -103,7 +103,7 @@ public class OfficeFloor {
         return sum;
     }
 
-    public int getNumberOfficePerFloor() {
+    private int getNumberOfficePerFloor() {
         int count = 0;
         Node temp = head;
         if (temp.next == head)
