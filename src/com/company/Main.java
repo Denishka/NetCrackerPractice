@@ -46,6 +46,7 @@ public class Main {
         for (int i = 0; i < b.getNumberOfficePerFloor(); i++) {
             System.out.print(b.getArrayOffice()[i].getAreaOffice()+" ");
         }
+
         System.out.println();
         System.out.print("Rooms: ");
         for (int i = 0; i < b.getNumberOfficePerFloor(); i++) {
