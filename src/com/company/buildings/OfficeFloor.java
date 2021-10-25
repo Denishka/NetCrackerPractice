@@ -1,14 +1,16 @@
-package com.company;
+package com.company.buildings;
+
+import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
 import java.util.Random;
 
-public class OfficeFloor {
+public class OfficeFloor implements Floor {
 
     private static class Node {
-        private Office office;
+        private Space office;
         private Node next;
 
-        public Node(Office office, Node next) {
+        public Node(Space office, Node next) {
             this.office = office;
             this.next = next;
         }
@@ -32,9 +34,9 @@ public class OfficeFloor {
         return temp;
     }
 
-    private void addNodeByNumber(Node node, int numberNode) throws Exception {
+    private void addNodeByNumber(Node node, int numberNode) {
         if (numberNode < 1)
-            throw new Exception("Invalid numberNode");
+            throw new SpaceIndexOutOfBoundsException("Invalid numberNode");
         Node temp = head;
 
         for (int i = 0; i < numberNode - 1; i++) {
@@ -44,9 +46,9 @@ public class OfficeFloor {
         temp.next = node;
     }
 
-    private void eraseNodeByNumber(int numberNode) throws Exception {
+    private void eraseNodeByNumber(int numberNode) {
         if (numberNode < 1)
-            throw new Exception("Invalid numberNode");
+            throw new SpaceIndexOutOfBoundsException("Invalid numberNode");
         Node temp = head;
         for (int i = 0; i < numberNode - 1; i++) {
             temp = temp.next;
@@ -55,6 +57,8 @@ public class OfficeFloor {
     }
 
     public OfficeFloor(int numberOfficePerFloor) {
+        if (numberOfficePerFloor < 1)
+            throw new SpaceIndexOutOfBoundsException("invalid numberOfficePerFloor");
         initHead();
         Node temp = head;
         for (int i = 0; i < numberOfficePerFloor; i++) {
@@ -67,7 +71,7 @@ public class OfficeFloor {
         temp.next = head;
     }
 
-    public OfficeFloor(Office[] arrayOfficePerFloor) {
+    public OfficeFloor(Space[] arrayOfficePerFloor) {
         initHead();
         Node temp = head;
         for (int i = 0; i < arrayOfficePerFloor.length; i++) {
@@ -79,31 +83,32 @@ public class OfficeFloor {
         temp.next = head;
     }
 
-    public float getSumAreaOffice() {
+    public float getSumAreas() {
         float sum = 0;
         Node temp = head;
         do {
             temp = temp.next;
-            sum += temp.office.getAreaOffice();
+            sum += temp.office.getArea();
         } while (temp.next != head);
         return sum;
     }
 
     private void initHead() {
-        head = new Node(null, head);
+        head = new Node();
+        head.next = head;
     }
 
-    public int getSumRoomOfficePerFloor() {
+    public int getNumberRooms() {
         int sum = 0;
         Node temp = head;
         do {
             temp = temp.next;
-            sum += temp.office.getCountRoomsOffice();
+            sum += temp.office.getNumberRooms();
         } while (temp.next != head);
         return sum;
     }
 
-    private int getNumberOfficePerFloor() {
+    public int getNumberSpaces() {
         int count = 0;
         Node temp = head;
         if (temp.next == head)
@@ -115,58 +120,66 @@ public class OfficeFloor {
         return count;
     }
 
-    public Office[] getArrayOffice() {
+    public Space[] getArraySpaces() {
         Node temp = head;
-        int numOffices = getNumberOfficePerFloor();
+        int numOffices = getNumberSpaces();
         if (numOffices < 1)
             return null;
 
-        Office[] array = new Office[numOffices];
+        Space[] array = new Space[numOffices];
         for (int i = 0; i < numOffices; i++) {
             temp = temp.next;
             array[i] = temp.office;
         }
-        return array;
+        return  array;
     }
 
-    public Office getOfficeByNumberPerFloor(int numberOfficePerFloor) {
+    public Space getSpaceByNumber(int numberSpace) {
         Node temp = head;
         int count = 0;
-        while (count != numberOfficePerFloor) {
+        int numberSpaces = getNumberSpaces();
+        if (temp.next == head || numberSpace < 1 || numberSpace > numberSpaces)
+            throw new SpaceIndexOutOfBoundsException("Invalid number office: index must be between " + 1 + " and " + numberSpaces + "(included)");
+
+        while (count != numberSpace) {
             temp = temp.next;
             count++;
         }
         return temp.office;
     }
 
-    public void setOfficeByNumberPerFloor(int numberOfficePerFloor, Office newOffice) {
+    public void setSpaceByNumber(int numberSpace, Space space) {
+        if (numberSpace < 0 || numberSpace > getNumberSpaces())
+            throw new SpaceIndexOutOfBoundsException("Invalid number office");
         Node temp = head;
         int count = 0;
-        while (count != numberOfficePerFloor) {
+        while (count != numberSpace) {
             temp = temp.next;
             count++;
         }
-        temp.office = newOffice;
+        temp.office =  space;
     }
 
-    public void addOfficeByNumberPerFloor(int numberOfficePerFloor, Office newOffice) throws Exception {
+    public void addSpaceByNumber(int numberSpace, Space space) {
+        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
+            throw new SpaceIndexOutOfBoundsException("Invalid number offices");
         Node temp = new Node();
-        temp.office = newOffice;
-        addNodeByNumber(temp, numberOfficePerFloor);
+        temp.office =  space;
+        addNodeByNumber(temp, numberSpace);
     }
 
-    public void eraseOfficeByNumberPerFloor(int numberOfficePerFloor) throws Exception {
-        eraseNodeByNumber(numberOfficePerFloor);
+    public void eraseSpaceByNumber(int numberSpace) {
+        eraseNodeByNumber(numberSpace);
     }
 
-    public Office getBestSpace() {
+    public Space getBestSpace() {
         float bestSpace = 0;
-        Office officeBestSpace = null;
+        Space officeBestSpace = null;
         Node temp = head;
-        for (int i = 0; i < getNumberOfficePerFloor(); i++) {
+        for (int i = 0; i < getNumberSpaces(); i++) {
             temp = temp.next;
-            if (temp.office.getAreaOffice() > bestSpace) {
-                bestSpace = temp.office.getAreaOffice();
+            if (temp.office.getArea() > bestSpace) {
+                bestSpace = temp.office.getArea();
                 officeBestSpace = temp.office;
             }
         }
