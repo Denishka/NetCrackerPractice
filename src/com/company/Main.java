@@ -2,6 +2,9 @@ package com.company;
 
 import com.company.buildings.*;
 
+import java.io.*;
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -109,7 +112,29 @@ public class Main {
         tmp.setSpaceByNumber(2, newSpace);
         System.out.println("Площадь после setSpace: " + tmp.getSpaceByNumber(2).getArea());
         System.out.println("Количество комнат после setSpace: " + tmp.getSpaceByNumber(2).getNumberRooms());
+        Scanner scanner = new Scanner(System.in);
 
 
+        Buildings.writeBuildingFormat(tmp, new PrintWriter(System.out));
+        System.out.println("");
+        //Buildings.readBuilding(new BufferedReader(new InputStreamReader(System.in)));
+
+
+        try {
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\denis\\OneDrive\\Рабочий стол\\src\\test.bin");
+            Buildings.outputBuilding(tmp, fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Building testInp;
+
+        try {
+            FileInputStream fileIn = new FileInputStream("C:\\Users\\denis\\OneDrive\\Рабочий стол\\src\\test.bin");
+            testInp = Buildings.inputBuilding(fileIn);
+            System.out.println(testInp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

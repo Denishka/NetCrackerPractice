@@ -6,6 +6,10 @@ import java.util.Random;
 
 public class OfficeFloor implements Floor {
 
+    public OfficeFloor() {
+        initHead();
+    }
+
     private static class Node {
         private Space office;
         private Node next;
@@ -26,20 +30,20 @@ public class OfficeFloor implements Floor {
 
     private Node getNodeByNumber(int numberNode) {
         Node temp = head;
-        if (temp == null)
+        if (head == head.next)
             return null;
-        for (int i = 0; i < numberNode; i++)
+        for (int i = 0; i <= numberNode; i++)
             temp = temp.next;
 
         return temp;
     }
 
     private void addNodeByNumber(Node node, int numberNode) {
-        if (numberNode < 1)
+        if (numberNode < 0)
             throw new SpaceIndexOutOfBoundsException("Invalid numberNode");
         Node temp = head;
 
-        for (int i = 0; i < numberNode - 1; i++) {
+        for (int i = 0; i < numberNode ; i++) {
             temp = temp.next;
         }
         node.next = temp.next;
@@ -47,10 +51,10 @@ public class OfficeFloor implements Floor {
     }
 
     private void eraseNodeByNumber(int numberNode) {
-        if (numberNode < 1)
+        if (numberNode < 0)
             throw new SpaceIndexOutOfBoundsException("Invalid numberNode");
         Node temp = head;
-        for (int i = 0; i < numberNode - 1; i++) {
+        for (int i = 0; i < numberNode; i++) {
             temp = temp.next;
         }
         temp.next = temp.next.next;
@@ -71,6 +75,8 @@ public class OfficeFloor implements Floor {
         temp.next = head;
     }
 
+
+
     public OfficeFloor(Space[] arrayOfficePerFloor) {
         initHead();
         Node temp = head;
@@ -84,6 +90,8 @@ public class OfficeFloor implements Floor {
     }
 
     public float getSumAreas() {
+        if(head == head.next)
+            return 0;
         float sum = 0;
         Node temp = head;
         do {
@@ -99,6 +107,8 @@ public class OfficeFloor implements Floor {
     }
 
     public int getNumberRooms() {
+        if(head == head.next)
+            return 0;
         int sum = 0;
         Node temp = head;
         do {
@@ -135,21 +145,24 @@ public class OfficeFloor implements Floor {
     }
 
     public Space getSpaceByNumber(int numberSpace) {
+        if(head == head.next)
+            return null;
         Node temp = head;
         int count = 0;
         int numberSpaces = getNumberSpaces();
-        if (temp.next == head || numberSpace < 1 || numberSpace > numberSpaces)
-            throw new SpaceIndexOutOfBoundsException("Invalid number office: index must be between " + 1 + " and " + numberSpaces + "(included)");
+        if (numberSpace < 0 || numberSpace >= numberSpaces)
+            throw new SpaceIndexOutOfBoundsException("Invalid number office: index must be between " + 0 + " and " + numberSpaces);
 
         while (count != numberSpace) {
             temp = temp.next;
             count++;
         }
+        temp = temp.next;
         return temp.office;
     }
 
     public void setSpaceByNumber(int numberSpace, Space space) {
-        if (numberSpace < 0 || numberSpace > getNumberSpaces())
+        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid number office");
         Node temp = head;
         int count = 0;
@@ -161,7 +174,7 @@ public class OfficeFloor implements Floor {
     }
 
     public void addSpaceByNumber(int numberSpace, Space space) {
-        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
+        if (numberSpace < 0 || numberSpace > getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid number offices");
         Node temp = new Node();
         temp.office =  space;
@@ -173,6 +186,8 @@ public class OfficeFloor implements Floor {
     }
 
     public Space getBestSpace() {
+        if(head == head.next)
+            return null;
         float bestSpace = 0;
         Space officeBestSpace = null;
         Node temp = head;

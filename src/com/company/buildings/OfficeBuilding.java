@@ -2,10 +2,14 @@ package com.company.buildings;
 
 import com.company.exceptions.FloorIndexOutOfBoundsException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
+import org.w3c.dom.ls.LSOutput;
 
 import java.rmi.server.ExportException;
 
 public class OfficeBuilding implements Building {
+    public OfficeBuilding() {
+    }
+
     private static class Node {
         private Floor floor;
         private Node next;
@@ -34,47 +38,38 @@ public class OfficeBuilding implements Building {
     }
 
     public void setSpaceByNumber(int numberSpace, Space newSpace) {
-        if (numberSpace < 1 || numberSpace > getNumberSpaces())
+        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid numberSpace");
         Node temp = head;
-        Space result = null;
         int count = 0;
 
         do {
             temp = temp.next;
             count += temp.floor.getNumberSpaces();
         } while (numberSpace > count);
-        Floor currentFloor = temp.floor;
         int numberSpacePerFloor = temp.floor.getNumberSpaces();
-        int n = 0;
-
         temp.floor.setSpaceByNumber(numberSpacePerFloor + numberSpace - count, newSpace);
     }
 
     public void addSpaceByNumber(int numberSpace, Space newSpace) {
-        if (numberSpace < 1 || numberSpace > getNumberSpaces() + 1)
+        if (numberSpace < 0 || numberSpace > getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid numberSpace");
         Node temp = head;
-        Space result = null;
         int count = 0;
-
         do {
             temp = temp.next;
             count += temp.floor.getNumberSpaces();
         } while (numberSpace > count);
-        Floor currentFloor = temp.floor;
         int numberSpacePerFloor = temp.floor.getNumberSpaces();
-        int n = 0;
-
         temp.floor.addSpaceByNumber(numberSpacePerFloor + numberSpace - count, newSpace);
 
     }
 
     private Node getNodeByNumber(int numberNode) {
         Node temp = head;
-        if (temp == null)
+        if (head == head.next)
             return null;
-        for (int i = 0; i < numberNode; i++) {
+        for (int i = 0; i <= numberNode; i++) {
             temp = temp.next;
 
         }
@@ -95,14 +90,12 @@ public class OfficeBuilding implements Building {
 
 
     private void addNodeByNumber(Node node, int numberNode) throws Exception {
-        if (numberNode < 1)
-            throw new Exception("Invalid numberNode");
-        if (getNumberFloors() + 1 <= numberNode)
-            throw new Exception("Invalid numberNode");
+        if (numberNode < 0 || getNumberFloors() < numberNode)
+            throw new Exception("Invalid numberNode; valid range: 0 to "+getNumberFloors()+"But your value is " + numberNode);
 
         Node temp = head;
         Node p = null;
-        for (int i = 0; i < numberNode - 1; i++) {
+        for (int i = 0; i < numberNode; i++) {
             temp = temp.next;
         }
         node.prev = temp;
@@ -113,14 +106,12 @@ public class OfficeBuilding implements Building {
     }
 
     private void eraseNodeByNumber(int numberNode) throws Exception {
-        if (numberNode < 1)
-            throw new Exception("Invalid numberNode");
-        if (getNumberFloors() < numberNode)
-            throw new Exception("Invalid numberNode");
+        if (numberNode < 0 || getNumberFloors() <= numberNode)
+            throw new Exception("Invalid numberNode; valid range: 0 to "+ (getNumberFloors()-1)+"But your value is " + numberNode);
 
         Node temp = head;
         Node p = null;
-        for (int i = 0; i < numberNode - 1; i++) {
+        for (int i = 0; i < numberNode; i++) { // по индексам
             temp = temp.next;
         }
         p = temp.next.next;
@@ -156,6 +147,7 @@ public class OfficeBuilding implements Building {
             node.next = temp.next;
             p = temp.next;
             temp.next = node;
+            temp = node;
             p.prev = node;
         }
         temp.next = head;
@@ -179,6 +171,8 @@ public class OfficeBuilding implements Building {
     public float getSumAreas() {
         float sum = 0;
         Node temp = head;
+        if (temp.next == head)
+            return 0;
         do {
             temp = temp.next;
             sum += temp.floor.getSumAreas();
@@ -189,6 +183,8 @@ public class OfficeBuilding implements Building {
     public int getNumberRooms() {
         int sum = 0;
         Node temp = head;
+        if (temp.next == head)
+            return 0;
         do {
             temp = temp.next;
             sum += temp.floor.getNumberRooms();
@@ -211,7 +207,7 @@ public class OfficeBuilding implements Building {
     }
 
     public Floor getFloorByNumber(int numberFloor) {
-        if (numberFloor < 1 || numberFloor > getNumberFloors())
+        if (numberFloor < 0 || numberFloor >= getNumberFloors())
             throw new FloorIndexOutOfBoundsException("Invalid numberFloor");
         Node temp = head;
         int count = 0;
@@ -219,11 +215,14 @@ public class OfficeBuilding implements Building {
             temp = temp.next;
             count++;
         }
+        temp = temp.next;
         return temp.floor;
     }
 
     public void setFloorByNumber(int numberFloor, Floor newFloor) {
-        if (numberFloor < 1 || numberFloor > getNumberFloors())
+        System.out.println();
+        System.out.println(numberFloor);
+        if (numberFloor < 0 || numberFloor >= getNumberFloors())
             throw new FloorIndexOutOfBoundsException("Invalid numberFloor");
         Node temp = head;
         int count = 0;
@@ -235,7 +234,7 @@ public class OfficeBuilding implements Building {
     }
 
     public Space getSpaceByNumber(int numberSpace) {
-        if (numberSpace < 1 || numberSpace > getNumberSpaces())
+        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid numberSpace");
         Node temp = head;
         int count = 0;
@@ -244,9 +243,7 @@ public class OfficeBuilding implements Building {
             temp = temp.next;
             count += temp.floor.getNumberSpaces();
         } while (numberSpace > count);
-        Floor currentFloor = temp.floor;
         int numberSpacePerFloor = temp.floor.getNumberSpaces();
-        int n = 0;
         //while (count != numberSpace) {
         //   count--;
         //   n++;
@@ -259,27 +256,23 @@ public class OfficeBuilding implements Building {
     } //
 
     public void eraseSpaceByNumber(int numberSpace) {
-        if (numberSpace < 1 || numberSpace > getNumberSpaces())
+        if (numberSpace < 0 || numberSpace >= getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid numberSpace");
         Node temp = head;
-        Office result = null;
         int count = 0;
-        // if (numberSpace > getNumberOfficeInOfficeBuildings())
-        // throw new Exception("Bad numberOffice");
         do {
             temp = temp.next;
             count += temp.floor.getNumberSpaces();
-        } while (numberSpace > getNumberSpaces());
+        } while (numberSpace >= count);
 
-        while (count != numberSpace) {
-            count++;
-            temp = temp.next;
-        }
-        temp.floor.eraseSpaceByNumber(count);
+        int numberSpacePerFloor = temp.floor.getNumberSpaces();
+        temp.floor.eraseSpaceByNumber(numberSpacePerFloor + numberSpace - count);
     }
 
     public Space getBestSpace() {
         Node temp = head;
+        if (temp.next == head)
+            return null;
         Space max = temp.next.floor.getBestSpace();
 
         while (temp != head)
@@ -294,13 +287,13 @@ public class OfficeBuilding implements Building {
         int count = 0;
         Space[] array = new Space[getNumberSpaces()];
         for (int i = 0; i < getNumberFloors(); i++) {
-            for (int j = 1; j <= temp.floor.getNumberSpaces(); j++) {
+            for (int j = 0; j < temp.floor.getNumberSpaces(); j++) {
                 array[count] = temp.floor.getSpaceByNumber(j);
                 count++;
             }
             temp = temp.next;
         }
-        for (int out = array.length - 1; out >= 1; out--) {
+        for (int out = array.length - 1; out >= 0; out--) {
             for (int in = 0; in < out; in++) {
                 if (array[in].getArea() < array[in + 1].getArea()) {
                     Space tmp = array[in];
