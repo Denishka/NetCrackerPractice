@@ -2,10 +2,11 @@ package com.company.buildings;
 
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Random;
 
-public class DwellingFloor implements Floor {
+public class DwellingFloor implements Floor, Serializable {
 
     private Space[] arrayFlat; // массив квартир
 
@@ -97,8 +98,30 @@ public class DwellingFloor implements Floor {
 
     @Override
     public String toString() {
-        return "DwellingFloor{" +
-                "arrayFlat=" + Arrays.toString(arrayFlat) +
-                '}';
+        StringBuffer str = new StringBuffer();
+        Space[] arrayOffices = getArraySpaces();
+        str.append("DwellingFloor (").append(getNumberSpaces());
+        for (int i = 0; i < arrayOffices.length; i++) {
+            str.append(", ").append(arrayOffices[i].toString());
+        }
+        str.append(")");
+        return str.toString();
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (!(object instanceof DwellingFloor))
+            return false;
+        DwellingFloor other  = (DwellingFloor) object;
+        for (int i = 0; i < getNumberSpaces(); i++) {
+           if(!(arrayFlat[i].equals(other.arrayFlat[i])))
+               return false;
+        }
+        return true;
     }
 }

@@ -4,9 +4,11 @@ import com.company.exceptions.FloorIndexOutOfBoundsException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 import org.w3c.dom.ls.LSOutput;
 
+import java.io.Serializable;
 import java.rmi.server.ExportException;
+import java.util.Objects;
 
-public class OfficeBuilding implements Building {
+public class OfficeBuilding implements Building, Serializable {
     public OfficeBuilding() {
     }
 
@@ -91,7 +93,7 @@ public class OfficeBuilding implements Building {
 
     private void addNodeByNumber(Node node, int numberNode) throws Exception {
         if (numberNode < 0 || getNumberFloors() < numberNode)
-            throw new Exception("Invalid numberNode; valid range: 0 to "+getNumberFloors()+"But your value is " + numberNode);
+            throw new Exception("Invalid numberNode; valid range: 0 to " + getNumberFloors() + "But your value is " + numberNode);
 
         Node temp = head;
         Node p = null;
@@ -107,7 +109,7 @@ public class OfficeBuilding implements Building {
 
     private void eraseNodeByNumber(int numberNode) throws Exception {
         if (numberNode < 0 || getNumberFloors() <= numberNode)
-            throw new Exception("Invalid numberNode; valid range: 0 to "+ (getNumberFloors()-1)+"But your value is " + numberNode);
+            throw new Exception("Invalid numberNode; valid range: 0 to " + (getNumberFloors() - 1) + "But your value is " + numberNode);
 
         Node temp = head;
         Node p = null;
@@ -220,12 +222,11 @@ public class OfficeBuilding implements Building {
     }
 
     public void setFloorByNumber(int numberFloor, Floor newFloor) {
-        System.out.println();
-        System.out.println(numberFloor);
         if (numberFloor < 0 || numberFloor >= getNumberFloors())
             throw new FloorIndexOutOfBoundsException("Invalid numberFloor");
         Node temp = head;
         int count = 0;
+        temp = temp.next;
         while (count != numberFloor) {
             temp = temp.next;
             count++;
@@ -304,4 +305,53 @@ public class OfficeBuilding implements Building {
         }
         return array;
     }
+
+
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        Floor[] arrFloor = getArrayFloors();
+        str.append("OfficeBuilding (").append(getNumberFloors());
+        for (int i = 0; i < arrFloor.length; i++) {
+            str.append(",").append(arrFloor[i].toString()).append("\t").append("\n");
+        }
+        str.append(")");
+        return str.toString();
+
+    }
+
+  /*  @Override
+    public String toString (){
+        StringBuilder str= new StringBuilder("");
+        str.append("OfficeBuilding: ").append("Floors count: ").append(getNumberFloors()).append("\n");
+        for (int i = 0; i < getNumberFloors(); i++) {
+            Floor currentFloor = getFloorByNumber(i);
+            str.append("Floor ").append(i).append(": ").append("\n");
+            for (int j = 0; j < currentFloor.getNumberSpaces(); j++) {
+                str.append("\tOffice ").append(j).append(": ").append(currentFloor.getSpaceByNumber(j)).append("\n");
+            }
+            str.append("\n");
+        }
+        return str.toString();
+    }*/
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof OfficeBuilding)) return false;
+        OfficeBuilding that = (OfficeBuilding) object;
+        Floor[] arr1 = getArrayFloors();
+        Floor[] arr2 = that.getArrayFloors();
+        if(arr1 == null && arr2 == null)
+            return false;
+        for (int i = 0; i < getNumberFloors(); i++) {
+            if (!(arr1[i].equals(arr2[i])))
+                return false;
+        }
+        return true;
+
+    }
+
+
 }

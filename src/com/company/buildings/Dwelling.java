@@ -3,9 +3,10 @@ package com.company.buildings;
 import com.company.exceptions.FloorIndexOutOfBoundsException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Dwelling implements Building {
+public class Dwelling implements Building, Serializable {
     private Floor[] arrayFloor;
 
     public Dwelling(int countFloor, int[] countFlatPerFloor) {
@@ -59,7 +60,7 @@ public class Dwelling implements Building {
     public void setFloorByNumber(int numberFloor, Floor newFloor) {
         if (numberFloor < 1 || numberFloor > getNumberFloors())
             throw new FloorIndexOutOfBoundsException("Invalid numberFloor");
-        arrayFloor[numberFloor] =  newFloor;
+        arrayFloor[numberFloor] = newFloor;
     }
 
     public Space getSpaceByNumber(int numberSpace) {
@@ -149,7 +150,7 @@ public class Dwelling implements Building {
                 countFlat++;
             }
         }
-        return  arrayAllFlat;
+        return arrayAllFlat;
     }
 
 
@@ -166,13 +167,40 @@ public class Dwelling implements Building {
                 }
             }
         }
-        return  allFlats;
+        return allFlats;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Dwelling{" +
                 "arrayFloor=" + Arrays.toString(arrayFloor) +
                 '}';
+    }*/
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        Floor[] arrFloor = getArrayFloors();
+        str.append("Dwelling (").append(getNumberFloors());
+        for (int i = 0; i < arrFloor.length; i++) {
+            str.append(",").append(arrFloor[i].toString()).append("\t").append("\n");
+        }
+        str.append(")");
+        return str.toString();
+
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Dwelling)) return false;
+        Dwelling that = (Dwelling) object;
+        if (arrayFloor == null && that.arrayFloor == null)
+            return false;
+        for (int i = 0; i < getNumberFloors(); i++) {
+            if (!(arrayFloor[i].equals(that.arrayFloor[i])))
+                return false;
+        }
+        return true;
     }
 }

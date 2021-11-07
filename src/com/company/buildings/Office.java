@@ -3,7 +3,11 @@ package com.company.buildings;
 import com.company.exceptions.InvalidRoomsCountException;
 import com.company.exceptions.InvalidSpaceAreaException;
 
-public class Office implements Space {
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.util.Objects;
+
+public class Office implements Space, Serializable {
     final static float DEFAULT_AREA = 250;
     final static int DEFAULT_ROOMS = 1;
 
@@ -53,7 +57,39 @@ public class Office implements Space {
 
     @Override
     public String toString() {
-        return "Office (area:" + area + "; rooms:" + rooms + ")";
+        return "Flat (" + area + "; " + rooms + ")";
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof Office))
+            return false;
+        Office office = (Office) object;
+        return PlacementExchanger.checkSwapSpace(this, office);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        byte[] arrDoubleBytes;
+        double areaDouble = (double) getArea();
+        //преобразуем общую сумму площадей в byte[]
+        arrDoubleBytes = ByteBuffer.allocate(8).putDouble(areaDouble).array();
+        byte[] arrFirstBytes = new byte[4];
+        byte[] arrLastBytes = new byte[4];
+        // в первый массив - первые 4 байта, во второй - последние 4 байта
+        for (int i = 0; i < 4; i++) {
+            arrFirstBytes[i] = arrDoubleBytes[i];
+            arrLastBytes[i] = arrDoubleBytes[7 - i];
+        }
+
+        int intFirstByte = ByteBuffer.wrap(arrFirstBytes).getInt();
+        int intSecondByte = ByteBuffer.wrap(arrLastBytes).getInt();
+
+        return getNumberRooms() ^ intFirstByte ^ intSecondByte;
     }
 
 

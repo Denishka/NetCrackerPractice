@@ -5,14 +5,16 @@ import com.company.exceptions.InexchangeableFloorsException;
 import com.company.exceptions.InexchangeableSpacesException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
-public class PlacementExchanger {
+import java.io.Serializable;
+
+public class PlacementExchanger implements Serializable {
 
     public static boolean checkSwapSpace(Space a, Space b) {
         return (a.getArea() == b.getArea() && a.getNumberRooms() == b.getNumberRooms());
     }
 
     public static boolean checkSwapFloor(Floor a, Floor b) {
-        return (a.getSumAreas() == b.getSumAreas() && a.getNumberSpaces() == b.getNumberRooms());
+        return (a.getSumAreas() == b.getSumAreas() && a.getNumberSpaces() == b.getNumberSpaces());
     }
 
     public static void exchangeFloorRooms(Floor floor1, int index1, Floor floor2, int index2) {

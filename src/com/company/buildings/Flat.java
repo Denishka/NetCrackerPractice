@@ -3,7 +3,9 @@ package com.company.buildings;
 import com.company.exceptions.InvalidRoomsCountException;
 import com.company.exceptions.InvalidSpaceAreaException;
 
-public class Flat implements Space {
+import java.io.Serializable;
+
+public class Flat implements Space, Serializable {
     final static float DEFAULT_AREA = 50;
     final static int DEFAULT_ROOMS = 2;
 
@@ -52,8 +54,20 @@ public class Flat implements Space {
     @Override
     public String toString() {
         return "Flat{" +
-                "area=" + area +
-                ", rooms=" + rooms +
+                "" + area +
+                ", " + rooms +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof Flat))
+            return false;
+        Flat flat = (Flat) object;
+        return PlacementExchanger.checkSwapSpace(this, flat);
+
     }
 }

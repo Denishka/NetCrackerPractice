@@ -2,15 +2,16 @@ package com.company.buildings;
 
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.Random;
 
-public class OfficeFloor implements Floor {
+public class OfficeFloor implements Floor, Serializable  {
 
     public OfficeFloor() {
         initHead();
     }
-
-    private static class Node {
+    private static class Node implements Serializable {
         private Space office;
         private Node next;
 
@@ -43,7 +44,7 @@ public class OfficeFloor implements Floor {
             throw new SpaceIndexOutOfBoundsException("Invalid numberNode");
         Node temp = head;
 
-        for (int i = 0; i < numberNode ; i++) {
+        for (int i = 0; i < numberNode; i++) {
             temp = temp.next;
         }
         node.next = temp.next;
@@ -76,7 +77,6 @@ public class OfficeFloor implements Floor {
     }
 
 
-
     public OfficeFloor(Space[] arrayOfficePerFloor) {
         initHead();
         Node temp = head;
@@ -90,7 +90,7 @@ public class OfficeFloor implements Floor {
     }
 
     public float getSumAreas() {
-        if(head == head.next)
+        if (head == head.next)
             return 0;
         float sum = 0;
         Node temp = head;
@@ -107,7 +107,7 @@ public class OfficeFloor implements Floor {
     }
 
     public int getNumberRooms() {
-        if(head == head.next)
+        if (head == head.next)
             return 0;
         int sum = 0;
         Node temp = head;
@@ -141,11 +141,11 @@ public class OfficeFloor implements Floor {
             temp = temp.next;
             array[i] = temp.office;
         }
-        return  array;
+        return array;
     }
 
     public Space getSpaceByNumber(int numberSpace) {
-        if(head == head.next)
+        if (head == head.next)
             return null;
         Node temp = head;
         int count = 0;
@@ -170,14 +170,14 @@ public class OfficeFloor implements Floor {
             temp = temp.next;
             count++;
         }
-        temp.office =  space;
+        temp.office = space;
     }
 
     public void addSpaceByNumber(int numberSpace, Space space) {
         if (numberSpace < 0 || numberSpace > getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid number offices");
         Node temp = new Node();
-        temp.office =  space;
+        temp.office = space;
         addNodeByNumber(temp, numberSpace);
     }
 
@@ -186,7 +186,7 @@ public class OfficeFloor implements Floor {
     }
 
     public Space getBestSpace() {
-        if(head == head.next)
+        if (head == head.next)
             return null;
         float bestSpace = 0;
         Space officeBestSpace = null;
@@ -199,6 +199,51 @@ public class OfficeFloor implements Floor {
             }
         }
         return officeBestSpace;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        Space[] arrayOffices = getArraySpaces();
+        str.append("OfficeFloor (").append(getNumberSpaces());
+        for (int i = 0; i < arrayOffices.length; i++) {
+            str.append(", ").append(arrayOffices[i].toString());
+        }
+        str.append(")");
+        return str.toString();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (!(object instanceof OfficeFloor))
+            return false;
+        OfficeFloor officeFloor = (OfficeFloor) object;
+        if (head == null && officeFloor.head != null)
+                return false;
+        else if (!(head.equals(officeFloor.head))) {
+            return false;
+        }
+        if (!(PlacementExchanger.checkSwapFloor(this, officeFloor)))
+                return false;
+
+        Space[] arr1 = getArraySpaces();
+        Space[] arr2 = officeFloor.getArraySpaces();
+
+        for (int i = 0; i < getNumberSpaces(); i++) {
+           if(!(arr1[i].equals(arr2[i])))
+               return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head);
     }
 
 

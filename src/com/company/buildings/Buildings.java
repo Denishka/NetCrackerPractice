@@ -2,10 +2,11 @@ package com.company.buildings;
 
 import java.io.*;
 import java.util.Formatter;
+import java.util.Locale;
 import java.util.Scanner;
 
 
-public class Buildings {
+public class Buildings implements Serializable{
     // 	записи данных о здании в байтовый поток
     public static void outputBuilding(Building building, OutputStream out) {
         try {
@@ -34,24 +35,21 @@ public class Buildings {
         Building building = null;
         try {
             int numberFloor = in1.readInt();
-            System.out.println(numberFloor);
             building = new OfficeBuilding(new OfficeFloor[numberFloor]);
-            for (int i = 1; i <= numberFloor; i++) {
+            for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloorByNumber(i, currentFloor);
 
                 int numberFlat = in1.readInt();
-                System.out.println(numberFlat);
-
-                for (int j = 0; j <= numberFlat; j++) {
+                for (int j = 0; j < numberFlat; j++) {
                     Space currentSpace = new Office();
                     currentFloor.addSpaceByNumber(j, currentSpace);
                     int numberRooms = in1.readInt();
                     currentSpace.setNumberRooms(numberRooms);
-                    System.out.println(numberRooms);
+
                     float area = in1.readFloat();
                     currentSpace.setArea(area);
-                    System.out.println(area);
+
                 }
             }
             in1.close();
@@ -68,11 +66,15 @@ public class Buildings {
             PrintWriter printWriter = new PrintWriter(out);
 
             printWriter.print(building.getNumberFloors());
-            for (int i = 1; i <= building.getNumberFloors(); i++) {
+            printWriter.print(" ");
+            for (int i = 0; i < building.getNumberFloors(); i++) {
                 printWriter.print(building.getFloorByNumber(i).getNumberSpaces());
-                for (int j = 1; j <= building.getFloorByNumber(i).getNumberSpaces(); j++) {
+                printWriter.print(" ");
+                for (int j = 0; j < building.getFloorByNumber(i).getNumberSpaces(); j++) {
                     printWriter.print(building.getFloorByNumber(i).getSpaceByNumber(j).getNumberRooms());
+                    printWriter.print(" ");
                     printWriter.print(building.getFloorByNumber(i).getSpaceByNumber(j).getArea());
+                    printWriter.print(" ");
                 }
             }
             printWriter.close();
@@ -97,29 +99,23 @@ public class Buildings {
 
             int numberFloor = (int) getNextIntFromTokenaizer(in1);
 
-            System.out.println(numberFloor);
             building = new OfficeBuilding(new OfficeFloor[numberFloor]);
-            for (int i = 1; i <= numberFloor; i++) {
+            for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloorByNumber(i, currentFloor);
 
                 int numberFlat = (int) getNextIntFromTokenaizer(in1);
-
-                System.out.println(numberFlat);
-
-                for (int j = 1; j <= numberFlat; j++) {
+                for (int j = 0; j < numberFlat; j++) {
                     Space currentSpace = new Office();
                     currentFloor.addSpaceByNumber(j, currentSpace);
 
                     int numberRooms = (int) getNextIntFromTokenaizer(in1);
 
                     currentSpace.setNumberRooms(numberRooms);
-                    System.out.println(numberRooms);
 
                     float area = (float) getNextIntFromTokenaizer(in1);
 
                     currentSpace.setArea(area);
-                    System.out.println(area);
                 }
             }
         } catch (Exception e) {
@@ -182,8 +178,9 @@ public class Buildings {
     }
 
     public static Building readBuilding(Scanner scanner) {
-        scanner.skip("Building");
-        scanner.skip("\n NumberFloors: ");
+        scanner.useLocale(Locale.US);
+        scanner.skip("Building:");
+        scanner.skip(" NumberFloors:");
         int numberFloors = scanner.nextInt();
         Floor[] floorsArray = new Floor[numberFloors];
         int numberSpaces = 0;
@@ -191,11 +188,11 @@ public class Buildings {
         float area = 0;
 
         for (int i = 0; i < numberFloors; i++) {
-            scanner.skip("\n NumberFlats: ");
+            scanner.skip(" NumberFlats:");
             numberSpaces = scanner.nextInt();
             floorsArray[i] = new OfficeFloor(numberSpaces);
             for (int j = 0; j < numberSpaces; j++) {
-                scanner.skip("\n\n NumberRooms: ");
+                scanner.skip(" NumberRooms:");
                 numberRooms = scanner.nextInt();
                 scanner.skip(" Area: ");
 
@@ -204,8 +201,8 @@ public class Buildings {
 
             }
         }
-        Building redBuilding = new OfficeBuilding(floorsArray);
-        return redBuilding;
+        Building readBuilding = new OfficeBuilding(floorsArray);
+        return readBuilding;
     }
 
 

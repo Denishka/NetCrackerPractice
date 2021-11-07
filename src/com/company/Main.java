@@ -112,29 +112,86 @@ public class Main {
         tmp.setSpaceByNumber(2, newSpace);
         System.out.println("Площадь после setSpace: " + tmp.getSpaceByNumber(2).getArea());
         System.out.println("Количество комнат после setSpace: " + tmp.getSpaceByNumber(2).getNumberRooms());
+
+
         Scanner scanner = new Scanner(System.in);
 
 
-        Buildings.writeBuildingFormat(tmp, new PrintWriter(System.out));
-        System.out.println("");
+        //  Buildings.writeBuildingFormat(tmp, new PrintWriter(System.out));
+        // System.out.println("");
         //Buildings.readBuilding(new BufferedReader(new InputStreamReader(System.in)));
 
 
         try {
-            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\denis\\OneDrive\\Рабочий стол\\src\\test.bin");
+            FileOutputStream fileOut = new FileOutputStream("C:\\prac_3\\out.bin");
+            System.out.println(tmp);
             Buildings.outputBuilding(tmp, fileOut);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+/*
         Building testInp;
 
         try {
-            FileInputStream fileIn = new FileInputStream("C:\\Users\\denis\\OneDrive\\Рабочий стол\\src\\test.bin");
+            FileInputStream fileIn = new FileInputStream("C:\\prac_3\\out.bin");
             testInp = Buildings.inputBuilding(fileIn);
-            System.out.println(testInp);
+            System.out.println(testInp.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+
+        ///txt
+        try {
+            FileWriter fileOut = new FileWriter("C:\\prac_3\\out.txt");
+            System.out.println(tmp);
+            Buildings.writeBuilding(tmp, fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("///////////////////////////");
+        try {
+            FileReader fileIn = new FileReader("C:\\prac_3\\out.txt");
+            testInp = Buildings.readBuilding(fileIn);
+            System.out.println(testInp.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter fileOut = new FileWriter("C:\\prac_3\\outFormat.txt");
+            System.out.println(tmp);
+            Buildings.writeBuildingFormat(tmp, fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+*/
+        Building testInp;
+
+      try {
+          File file = new File("C:\\prac_3\\outFormat.txt");
+            Scanner fileIn = new Scanner(file);
+            testInp = Buildings.readBuilding(fileIn);
+            System.out.println(testInp.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+/*
+        try {
+            FileOutputStream fileOut = new FileOutputStream("C:\\prac_3\\outSer.bin");
+            System.out.println(tmp);
+            Buildings.serializeBuilding(tmp, fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Building testInp1;
+
+*/
+
     }
 }
