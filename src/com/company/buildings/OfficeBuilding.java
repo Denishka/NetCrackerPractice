@@ -12,7 +12,7 @@ public class OfficeBuilding implements Building, Serializable {
     public OfficeBuilding() {
     }
 
-    private static class Node {
+    private static class Node implements Serializable {
         private Floor floor;
         private Node next;
         private Node prev;

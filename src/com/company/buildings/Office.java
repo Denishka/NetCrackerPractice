@@ -92,5 +92,17 @@ public class Office implements Space, Serializable {
         return getNumberRooms() ^ intFirstByte ^ intSecondByte;
     }
 
+    @Override
+    public Object clone(){
+        Object result = null;
+
+        try {
+            result = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
 }

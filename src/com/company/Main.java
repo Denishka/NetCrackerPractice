@@ -122,13 +122,13 @@ public class Main {
         //Buildings.readBuilding(new BufferedReader(new InputStreamReader(System.in)));
 
 
-        try {
+        /*try {
             FileOutputStream fileOut = new FileOutputStream("C:\\prac_3\\out.bin");
             System.out.println(tmp);
             Buildings.outputBuilding(tmp, fileOut);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
 /*
         Building testInp;
 
@@ -170,17 +170,17 @@ public class Main {
 */
         Building testInp;
 
-      try {
+     /* try {
           File file = new File("C:\\prac_3\\outFormat.txt");
             Scanner fileIn = new Scanner(file);
             testInp = Buildings.readBuilding(fileIn);
             System.out.println(testInp.toString());
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
 
-/*
+
         try {
             FileOutputStream fileOut = new FileOutputStream("C:\\prac_3\\outSer.bin");
             System.out.println(tmp);
@@ -191,7 +191,7 @@ public class Main {
 
         Building testInp1;
 
-*/
+
 
     }
 }

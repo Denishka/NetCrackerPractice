@@ -241,10 +241,22 @@ public class OfficeFloor implements Floor, Serializable  {
     }
 
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(head);
+   /* @Override
+    public Object clone() {
+        Floor result = null;
+        try {
+            result = (Floor) super.clone();
+            for (int i = 0; i < result.getNumberSpaces(); i++) {
+                result.setSpaceByNumber(i, (Space) result.getSpaceByNumber(i).clone());
+            }
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError();
+        }
+        return result;
     }
+*/
+
+
 
 
 }
