@@ -1,6 +1,9 @@
 package com.company.buildings;
 
-public interface Building {
+import java.util.Iterator;
+
+public interface Building extends Iterable<Floor> {
+
     int getNumberFloors();
 
     int getNumberSpaces();
@@ -26,4 +29,6 @@ public interface Building {
     Space getBestSpace();
 
     Space[] getSortArraySpaces();
+
+    Object clone();
 }

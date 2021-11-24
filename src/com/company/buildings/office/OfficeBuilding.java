@@ -1,17 +1,43 @@
-package com.company.buildings;
+package com.company.buildings.office;
 
+import com.company.buildings.Building;
+import com.company.buildings.Floor;
+import com.company.buildings.Space;
 import com.company.exceptions.FloorIndexOutOfBoundsException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.Serializable;
-import java.rmi.server.ExportException;
-import java.util.Objects;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class OfficeBuilding implements Building, Serializable {
+public class OfficeBuilding implements Building, Serializable, Cloneable {
     public OfficeBuilding() {
     }
 
+    @Override
+    public Iterator<Floor> iterator() {
+        return new OfficeBuilding.OfficeBuildingsIterator();
+    }
+
+    //пользовательский класс итератор
+    public class OfficeBuildingsIterator implements Iterator<Floor> {
+        ///-1 проверяем есть ли начальный элемент
+        Node tmp = head;
+
+        @Override
+        public boolean hasNext() {
+            return tmp.next != head;
+        }
+
+        @Override
+        public Floor next() {
+            if (hasNext()) {
+                tmp = tmp.next;
+                return tmp.floor;
+            }
+            throw new NoSuchElementException("");
+        }
+    }
     private static class Node implements Serializable {
         private Floor floor;
         private Node next;
@@ -306,7 +332,6 @@ public class OfficeBuilding implements Building, Serializable {
         return array;
     }
 
-
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
@@ -335,7 +360,14 @@ public class OfficeBuilding implements Building, Serializable {
         return str.toString();
     }*/
 
-
+    @Override // OfficeBuilding
+    public int hashCode() {
+        int result = this.getNumberFloors();
+        for (int i = 0; i < getNumberFloors(); ++i) {
+            result ^= this.getFloorByNumber(i).hashCode();
+        }
+        return result;
+    }
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -351,6 +383,20 @@ public class OfficeBuilding implements Building, Serializable {
         }
         return true;
 
+    }
+
+    @Override
+    public Object clone() {
+
+        Floor[] arrFloors = getArrayFloors();
+        Floor[] cloneArrFloors= new OfficeFloor[arrFloors.length];
+
+        for (int i = 0; i < arrFloors.length; i++)
+            cloneArrFloors[i] = (Floor) arrFloors[i].clone();
+
+        OfficeBuilding tmp = new OfficeBuilding(cloneArrFloors);
+
+      return tmp;
     }
 
 

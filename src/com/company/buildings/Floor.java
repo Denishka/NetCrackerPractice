@@ -1,6 +1,6 @@
 package com.company.buildings;
 
-public interface Floor {
+public interface Floor extends Iterable<Space>, Comparable<Floor>{
     int getNumberSpaces();
 
     float getSumAreas();
@@ -19,4 +19,7 @@ public interface Floor {
 
     Space getBestSpace();
 
+    Object clone();
+
+    int compareTo(Floor o);
 }

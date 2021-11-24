@@ -1,11 +1,14 @@
-package com.company.buildings;
+package com.company.buildings.dwelling;
 
+import com.company.buildings.PlacementExchanger;
+import com.company.buildings.Space;
 import com.company.exceptions.InvalidRoomsCountException;
 import com.company.exceptions.InvalidSpaceAreaException;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 
-public class Flat implements Space, Serializable {
+public class Flat implements Space, Serializable, Cloneable {
     final static float DEFAULT_AREA = 50;
     final static int DEFAULT_ROOMS = 2;
 
@@ -59,7 +62,26 @@ public class Flat implements Space, Serializable {
                 '}';
     }
 
+    @Override
+    public int hashCode() {
+        byte[] arrDoubleBytes;
+        double areaDouble = getArea();
+        //преобразуем общую сумму площадей в byte[]
+        arrDoubleBytes = ByteBuffer.allocate(8).putDouble(areaDouble).array();
+        byte[] arrFirstBytes = new byte[4];
+        byte[] arrLastBytes = new byte[4];
 
+        // в первый массив - первые 4 байта, во второй - последние 4 байта
+        for (int i = 0; i < 4; i++) {
+            arrFirstBytes[i] = arrDoubleBytes[i];
+            arrLastBytes[i] = arrDoubleBytes[4 + i];
+        }
+
+        int intFirstByte = ByteBuffer.wrap(arrFirstBytes).getInt();
+        int intSecondByte = ByteBuffer.wrap(arrLastBytes).getInt();
+
+        return getNumberRooms() ^ intFirstByte ^ intSecondByte;
+    }
     @Override
     public boolean equals(Object object) {
         if (object == this)
@@ -82,5 +104,14 @@ public class Flat implements Space, Serializable {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public int compareTo(Space o) {
+        if(this.getArea() > o.getArea())
+            return 1;
+        if(this.getArea() == o.getArea())
+            return 0;
+        return -1;
     }
 }

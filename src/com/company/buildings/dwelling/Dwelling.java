@@ -1,14 +1,42 @@
-package com.company.buildings;
+package com.company.buildings.dwelling;
 
+import com.company.buildings.Building;
+import com.company.buildings.Floor;
+import com.company.buildings.Space;
 import com.company.exceptions.FloorIndexOutOfBoundsException;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class Dwelling implements Building, Serializable {
-    private Floor[] arrayFloor;
+public class Dwelling implements Building, Serializable, Cloneable {
+    protected Floor[] arrayFloor;
 
+    @Override
+    public Iterator<Floor> iterator() {
+        return new Dwelling.DwellingIterator();
+    }
+
+    //пользовательский класс итератор
+    public class DwellingIterator implements Iterator<Floor>
+    {
+        ///-1 проверяем есть ли начальный элемент
+        int currentPos=-1;
+        @Override
+        public boolean hasNext() {
+            return currentPos + 1 < arrayFloor.length;
+        }
+
+        @Override
+        public Floor next() {
+            if(hasNext()) {
+                return arrayFloor[++currentPos];
+            }
+            throw new NoSuchElementException("");
+        }
+
+    }
     public Dwelling(int countFloor, int[] countFlatPerFloor) {
         arrayFloor = new Floor[countFloor];
         for (int i = 0; i < arrayFloor.length; i++) {
@@ -104,7 +132,7 @@ public class Dwelling implements Building, Serializable {
     }
 
     public void eraseSpaceByNumber(int numberSpace) {
-        if (numberSpace < 1 || numberSpace > getNumberSpaces())
+        if (numberSpace < 0 || numberSpace > getNumberSpaces())
             throw new SpaceIndexOutOfBoundsException("Invalid numberSpace");
         int countFlats = 0;
         for (int i = 0; i < arrayFloor.length; i++) {
@@ -113,6 +141,7 @@ public class Dwelling implements Building, Serializable {
                 //ищем квартиру на текущем этаже
                 int numberFlatOnCurrentFloor = numberSpace - countFlats;
                 arrayFloor[i].eraseSpaceByNumber(numberFlatOnCurrentFloor);
+                return;
             }
             countFlats += countFlatsInCurrentFloor;
 
@@ -170,12 +199,7 @@ public class Dwelling implements Building, Serializable {
         return allFlats;
     }
 
-    /*@Override
-    public String toString() {
-        return "Dwelling{" +
-                "arrayFloor=" + Arrays.toString(arrayFloor) +
-                '}';
-    }*/
+
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
@@ -189,7 +213,14 @@ public class Dwelling implements Building, Serializable {
 
     }
 
-
+    @Override
+    public int hashCode() {
+        int result = this.getNumberFloors();
+        for (int i = 0; i < getNumberFloors(); ++i) {
+            result ^= this.getFloorByNumber(i).hashCode();
+        }
+        return result;
+    }
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -202,5 +233,22 @@ public class Dwelling implements Building, Serializable {
                 return false;
         }
         return true;
+    }
+
+
+    @Override
+    public Object clone(){
+        Object result = null;
+
+        try {
+            result = super.clone();
+            ((Dwelling)result).arrayFloor = new Floor[getNumberFloors()];
+            for (int i = 0; i < getNumberFloors(); i++) {
+                ((Dwelling) result).arrayFloor[i] = (Floor) getFloorByNumber(i).clone();
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -1,16 +1,48 @@
-package com.company.buildings;
+package com.company.buildings.office;
 
+import com.company.buildings.Floor;
+import com.company.buildings.PlacementExchanger;
+import com.company.buildings.Space;
+import com.company.buildings.dwelling.DwellingFloor;
 import com.company.exceptions.SpaceIndexOutOfBoundsException;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
-public class OfficeFloor implements Floor, Serializable  {
+public class OfficeFloor implements Floor, Serializable, Cloneable {
 
     public OfficeFloor() {
         initHead();
     }
+
+    @Override
+    public Iterator<Space> iterator() {
+        return new OfficeFloor.OfficeFloorIterator();
+    }
+
+    //пользовательский класс итератор
+    public class OfficeFloorIterator implements Iterator<Space> {
+        ///-1 проверяем есть ли начальный элемент
+        Node tmp = head;
+
+        @Override
+        public boolean hasNext() {
+            return tmp.next != head;
+        }
+
+        @Override
+        public Space next() {
+            if (hasNext()) {
+                tmp = tmp.next;
+                return tmp.office;
+            }
+            throw new NoSuchElementException("");
+        }
+    }
+
+
     private static class Node implements Serializable {
         private Space office;
         private Node next;
@@ -213,6 +245,15 @@ public class OfficeFloor implements Floor, Serializable  {
         return str.toString();
     }
 
+    @Override // OfficeFloor
+    public int hashCode() {
+        int result = getNumberSpaces();
+        for (int i = 0; i < getNumberSpaces(); ++i) {
+            result ^= this.getSpaceByNumber(i).hashCode();
+        }
+        return result;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object)
@@ -223,41 +264,41 @@ public class OfficeFloor implements Floor, Serializable  {
             return false;
         OfficeFloor officeFloor = (OfficeFloor) object;
         if (head == null && officeFloor.head != null)
-                return false;
+            return false;
         else if (!(head.equals(officeFloor.head))) {
             return false;
         }
         if (!(PlacementExchanger.checkSwapFloor(this, officeFloor)))
-                return false;
+            return false;
 
         Space[] arr1 = getArraySpaces();
         Space[] arr2 = officeFloor.getArraySpaces();
 
         for (int i = 0; i < getNumberSpaces(); i++) {
-           if(!(arr1[i].equals(arr2[i])))
-               return false;
+            if (!(arr1[i].equals(arr2[i])))
+                return false;
         }
         return true;
     }
 
 
-   /* @Override
+    @Override
     public Object clone() {
-        Floor result = null;
-        try {
-            result = (Floor) super.clone();
-            for (int i = 0; i < result.getNumberSpaces(); i++) {
-                result.setSpaceByNumber(i, (Space) result.getSpaceByNumber(i).clone());
-            }
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError();
-        }
-        return result;
+        OfficeFloor tmp = new OfficeFloor();
+        Space[] arrSpace = getArraySpaces();
+        for (int i = 0; i < getNumberSpaces(); i++)
+            tmp.addSpaceByNumber(i, (Space) arrSpace[i].clone());
+        return tmp;
     }
-*/
 
-
-
+    @Override
+    public int compareTo(Floor o) {
+        if(this.getNumberSpaces() > o.getNumberSpaces())
+            return 1;
+        if(this.getNumberSpaces() == o.getNumberSpaces())
+            return 0;
+        return -1;
+    }
 
 }
 

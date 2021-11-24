@@ -1,12 +1,17 @@
 package com.company.buildings;
 
+import com.company.buildings.office.Office;
+import com.company.buildings.office.OfficeBuilding;
+import com.company.buildings.office.OfficeFloor;
+
 import java.io.*;
+import java.util.Comparator;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.Scanner;
 
 
-public class Buildings implements Serializable{
+public class Buildings {
     // 	записи данных о здании в байтовый поток
     public static void outputBuilding(Building building, OutputStream out) {
         try {
@@ -20,7 +25,6 @@ public class Buildings implements Serializable{
                     out1.writeFloat(building.getFloorByNumber(i).getSpaceByNumber(j).getArea());
                 }
             }
-            out1.close();
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("Some error occurred!");
         } catch (IOException e) {
@@ -35,7 +39,7 @@ public class Buildings implements Serializable{
         Building building = null;
         try {
             int numberFloor = in1.readInt();
-            building = new OfficeBuilding(new OfficeFloor[numberFloor]);
+            building = new OfficeBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloorByNumber(i, currentFloor);
@@ -52,7 +56,6 @@ public class Buildings implements Serializable{
 
                 }
             }
-            in1.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,7 +80,7 @@ public class Buildings implements Serializable{
                     printWriter.print(" ");
                 }
             }
-            printWriter.close();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +102,7 @@ public class Buildings implements Serializable{
 
             int numberFloor = (int) getNextIntFromTokenaizer(in1);
 
-            building = new OfficeBuilding(new OfficeFloor[numberFloor]);
+            building = new OfficeBuilding(new Floor[numberFloor]);
             for (int i = 0; i < numberFloor; i++) {
                 Floor currentFloor = new OfficeFloor();
                 building.setFloorByNumber(i, currentFloor);
@@ -130,7 +133,7 @@ public class Buildings implements Serializable{
         try {
             ObjectOutputStream out1 = new ObjectOutputStream(out);
             out1.writeObject(building);
-            out1.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,14 +146,13 @@ public class Buildings implements Serializable{
         try {
             ObjectInputStream in1 = new ObjectInputStream(in);
             building = (Building) in1.readObject();
-
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return building;
-
     }
 
+    // метод текстовой записи
     public static void writeBuildingFormat(Building building, Writer out) {
         Formatter f = new Formatter(out);
         int numberFloors = building.getNumberFloors();
@@ -168,7 +170,6 @@ public class Buildings implements Serializable{
                 }
             }
             f.format("Building: %s\n", str.toString());
-            f.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,6 +178,7 @@ public class Buildings implements Serializable{
 
     }
 
+    // метод текстового чтения
     public static Building readBuilding(Scanner scanner) {
         scanner.useLocale(Locale.US);
         scanner.skip("Building:");
@@ -206,6 +208,68 @@ public class Buildings implements Serializable{
     }
 
 
+   /* public static void write2BuildingFormat(Building building, Writer out) {
+        try{
+        ((PrintWriter) out).printf("Building:");
+        int numberFloors = building.getNumberFloors();
+        ((PrintWriter) out).printf(" NumberFloors: %d", numberFloors);
+        int numberSpaces = 0;
+        int numberRooms = 0;
+        double area = 0;
+        for (int i = 0; i < numberFloors; i++) {
+            numberSpaces = building.getFloorByNumber(i).getNumberSpaces();
+            ((PrintWriter) out).printf(" NumberFlats: %d", numberSpaces);
+            for (int j = 0; j < numberSpaces; j++) {
+                numberRooms = building.getFloorByNumber(i).getSpaceByNumber(j).getNumberRooms();
+                ((PrintWriter) out).printf(" NumberRooms: %d", numberRooms);
+                area = building.getFloorByNumber(i).getSpaceByNumber(j).getArea();
+                ((PrintWriter) out).printf(" Area: %f", area);
+            }
+        }
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+
+
+    public static <T extends Comparable<T>> void sort(T[] objects) {
+        for (int i = 0; i < objects.length; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < objects.length; j++) {
+                if (objects[j].compareTo(objects[minIndex]) < 0)
+                    minIndex = j;
+            }
+            T swapBuf = objects[i];
+            objects[i] = objects[minIndex];
+            objects[minIndex] = swapBuf;
+        }
+    }
+
+
+    public static <T> void sort(T[] objects, Comparator<T> criterion) {
+        for (int i = 0; i < objects.length; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < objects.length; j++) {
+                if (criterion.compare(objects[j], objects[minIndex]) < 0)
+                    minIndex = j;
+            }
+            T swapBuf = objects[i];
+            objects[i] = objects[minIndex];
+            objects[minIndex] = swapBuf;
+        }
+    }
+
+
+
 }
+
+
+
+
+
+
+
 
 

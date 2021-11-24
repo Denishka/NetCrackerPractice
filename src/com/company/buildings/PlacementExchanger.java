@@ -17,6 +17,7 @@ public class PlacementExchanger implements Serializable {
         return (a.getSumAreas() == b.getSumAreas() && a.getNumberSpaces() == b.getNumberSpaces());
     }
 
+    //метод обмена помещениями двух этажей
     public static void exchangeFloorRooms(Floor floor1, int index1, Floor floor2, int index2) {
         Space[] arraySpaceA = floor1.getArraySpaces();
         Space[] arraySpaceB = floor2.getArraySpaces();
@@ -42,6 +43,7 @@ public class PlacementExchanger implements Serializable {
 
     }
 
+    // метод обмена этажами двух зданий
     public static void exchangeBuildingFloors(Building building1, int index1, Building building2, int index2) {
         Floor[] arrayFloorA = building1.getArrayFloors();
         Floor[] arrayFloorB = building2.getArrayFloors();

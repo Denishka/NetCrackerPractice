@@ -1,13 +1,14 @@
-package com.company.buildings;
+package com.company.buildings.office;
 
+import com.company.buildings.PlacementExchanger;
+import com.company.buildings.Space;
 import com.company.exceptions.InvalidRoomsCountException;
 import com.company.exceptions.InvalidSpaceAreaException;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
-public class Office implements Space, Serializable {
+public class Office implements Space, Serializable, Cloneable {
     final static float DEFAULT_AREA = 250;
     final static int DEFAULT_ROOMS = 1;
 
@@ -83,7 +84,7 @@ public class Office implements Space, Serializable {
         // в первый массив - первые 4 байта, во второй - последние 4 байта
         for (int i = 0; i < 4; i++) {
             arrFirstBytes[i] = arrDoubleBytes[i];
-            arrLastBytes[i] = arrDoubleBytes[7 - i];
+            arrLastBytes[i] = arrDoubleBytes[4 + i];
         }
 
         int intFirstByte = ByteBuffer.wrap(arrFirstBytes).getInt();
@@ -93,7 +94,7 @@ public class Office implements Space, Serializable {
     }
 
     @Override
-    public Object clone(){
+    public Object clone() {
         Object result = null;
 
         try {
@@ -105,4 +106,12 @@ public class Office implements Space, Serializable {
     }
 
 
+    @Override
+    public int compareTo(Space o) {
+        if(this.getArea() > o.getArea())
+            return 1;
+        if(this.getArea() == o.getArea())
+            return 0;
+        return -1;
+    }
 }

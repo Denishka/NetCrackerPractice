@@ -1,8 +1,15 @@
 package com.company;
 
 import com.company.buildings.*;
+import com.company.buildings.dwelling.Dwelling;
+import com.company.buildings.dwelling.DwellingFloor;
+import com.company.buildings.dwelling.Flat;
+import com.company.buildings.dwelling.hotel.Hotel;
+import com.company.buildings.dwelling.hotel.HotelFloor;
+import com.company.buildings.office.Office;
+import com.company.buildings.office.OfficeBuilding;
+import com.company.buildings.office.OfficeFloor;
 
-import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -180,7 +187,7 @@ public class Main {
         }*/
 
 
-
+/*
         try {
             FileOutputStream fileOut = new FileOutputStream("C:\\prac_3\\outSer.bin");
             System.out.println(tmp);
@@ -189,9 +196,101 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println("/////");
+        try {
+            FileInputStream fileOut = new FileInputStream("C:\\prac_3\\outSer.bin");
+            tmp = Buildings.deserializeBuilding(fileOut);
+             System.out.println(tmp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         Building testInp1;
 
 
 
+        File fWOut = new File("C:\\prac_3\\outFormat2.txt");
+
+        try {
+            PrintWriter fw = new PrintWriter(fWOut);
+            Buildings.write2BuildingFormat(tmp,fw);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
+
+/*
+        System.out.println("Test clone: OfficeFloor");
+  Floor test = new OfficeFloor(5);
+  Floor clone = (Floor) test.clone();
+  clone.eraseSpaceByNumber(2);
+        System.out.println(test);
+        System.out.println("\n CLONE:\n "+clone);
+
+
+        System.out.println("Test clone: OfficeBuildings");
+Building clone2 = (Building) tmp.clone();
+        clone2.setFloorByNumber(6, test);
+        System.out.println(tmp);
+        System.out.println("\n CLONE:\n "+ clone2);
+
+
+        System.out.println("Test clone: Office");
+        Space testSpace = new Office(10,10);
+        Space cloneSpace = (Office) testSpace.clone();
+        cloneSpace.setArea(15);
+        System.out.println(testSpace);
+        System.out.println("CLONE:\n "+ cloneSpace);
+
+        System.out.println("Test clone: Flat");
+        Space testFlat = new Flat(10,10);
+        Space cloneFlat = (Flat) testFlat.clone();
+        cloneFlat.setArea(15);
+        System.out.println(testFlat);
+        System.out.println("CLONE:\n "+ cloneFlat);
+
+        System.out.println("Test clone: DwellingFloor");
+        Floor testDwellingFloor = new DwellingFloor(5);
+        Floor cloneTestDwellingFloor = (DwellingFloor) testDwellingFloor.clone();
+        cloneTestDwellingFloor.setSpaceByNumber(1, testFlat);
+        System.out.println(testDwellingFloor);
+        System.out.println("\n CLONE:\n "+cloneTestDwellingFloor);
+//check erase
+
+        System.out.println("Test clone: Dwelling");
+
+        int[] countSpace1 = new int[]{3,2};
+        Dwelling dwelling = new Dwelling(2,countSpace1);
+        Space spaceTest = new Flat(15,15);
+
+        Dwelling cloneDwelling = (Dwelling) dwelling.clone();
+        cloneDwelling.eraseSpaceByNumber(2);
+        System.out.println(dwelling);
+        System.out.println("\n CLONE:\n "+ cloneDwelling);
+
+ */
+
+        System.out.println("TEST HOTEL (6 practice)");
+
+
+        System.out.println("getNumberStars");
+        Floor[] arrayHotelFloor = new Floor[2];
+        for (int i = 0; i < arrayHotelFloor.length; i++) {
+            arrayHotelFloor[i] = new HotelFloor(2+i);
+        }
+        Hotel hotel = new Hotel(arrayHotelFloor);
+        ((HotelFloor)arrayHotelFloor[1]).setNumberStars(5);
+        System.out.println(hotel.getNumberStars());
+        System.out.println("");
+
+
+        System.out.println("Hotel: gestBestSpace: ");
+        System.out.println(arrayHotelFloor[0]);
+        System.out.println(arrayHotelFloor[1]);
+        ((HotelFloor)arrayHotelFloor[0]).setNumberStars(1);
+        System.out.println(hotel.getBestSpace());
+        hotel.getBestSpace();
+
+        System.out.println(hotel);
     }
 }

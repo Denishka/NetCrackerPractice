@@ -1,6 +1,6 @@
 package com.company.buildings;
 
-public interface Space {
+public interface Space extends Comparable<Space> {
     int getNumberRooms();
 
     void setNumberRooms(int newNumberRooms);
@@ -8,4 +8,6 @@ public interface Space {
     float getArea();
 
     void setArea(float newArea);
+
+     Object clone();
 }
