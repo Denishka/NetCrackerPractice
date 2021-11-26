@@ -292,5 +292,9 @@ Building clone2 = (Building) tmp.clone();
         hotel.getBestSpace();
 
         System.out.println(hotel);
+
+
+
+
     }
 }
