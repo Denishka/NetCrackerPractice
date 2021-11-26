@@ -290,7 +290,7 @@ Building clone2 = (Building) tmp.clone();
         ((HotelFloor)arrayHotelFloor[0]).setNumberStars(1);
         System.out.println(hotel.getBestSpace());
         hotel.getBestSpace();
-
+ss
         System.out.println(hotel);
 
 
