@@ -291,7 +291,7 @@ Building clone2 = (Building) tmp.clone();
         System.out.println(hotel.getBestSpace());
         hotel.getBestSpace();
         System.out.println(hotel);
-mk
+
 
 
 
